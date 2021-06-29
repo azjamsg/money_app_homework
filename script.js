@@ -48,8 +48,9 @@ function addTransactionDOM(transaction) {
 function updateValues() {
   const deposits = TransactionData.map(transaction => transaction.deposit);
   const loans = TransactionData.map(transaction => transaction.loan);
-  const total_deposit = deposits.reduce((acc, item) => (acc += item), 0).toFixed(2);
-  const total_loan = loans.reduce((acc, item) => (acc += item), 0).toFixed(2);
+  // no const here
+  total_deposit = deposits.reduce((acc, item) => (acc += item), 0).toFixed(2);
+  total_loan = loans.reduce((acc, item) => (acc += item), 0).toFixed(2);
   const bal = total_deposit - total_loan;
   balance.innerText = `$${bal}`;
   money_plus.innerText = `$${total_deposit}`;
@@ -80,8 +81,9 @@ function filterTransaction(e) {
 function myFunction() {
 //data source
   let data = [
-    {label: "Deposit", amt: int(total_deposit)},
-    {label: "Loan", amt: int(total_loan)},
+    // no int here
+    {label: "Deposit", amt: total_deposit},
+    {label: "Loan", amt: total_loan},
   ];
 
 //canvas
@@ -100,7 +102,8 @@ function myFunction() {
 
   // Compute the position of each group on the pie:   
   var pie = d3.pie().value(function(d) { 
-        return data.amt; 
+    //change data.amt to d.amt
+        return d.amt; 
      });
   //radius for the arc   
   var path = d3.arc()
@@ -121,7 +124,8 @@ function myFunction() {
 
       arc.append("path")
            .attr("d", path)
-           .attr("fill", function(d) { return color(data.label); });
+           //change data.label to d.data.label
+           .attr("fill", function(d) { return color(d.data.label); });
 
            console.log(arc);
     
@@ -129,14 +133,14 @@ function myFunction() {
          .attr("transform", function(d) { 
            return "translate(" + label.centroid(d) + ")"; 
    })
-        
-        .text(function(d) { return data.label; });
+        //change data.label to d.data.label
+        .text(function(d) { return d.data.label; });
 
         svg.append("g")
         .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
         .append("text").text("Expenses this Month - July 2020")
         .attr("class", "title")
-        
+  
   }
 
   init();
